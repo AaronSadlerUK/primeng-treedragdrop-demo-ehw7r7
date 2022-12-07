@@ -1,4 +1,4 @@
-import { NgModule }      from '@angular/core';
+import { NgModule, Injector }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -33,7 +33,21 @@ import {ContextMenuModule} from 'primeng/contextmenu';
   ],
   declarations: [ AppComponent ],
   bootstrap:    [ AppComponent ],
-  providers: [NodeService]
+  providers: [NodeService],
+  entryComponents: [
+    AppComponent
+  ]
 })
 
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) { }
+ 
+  ngDoBootstrap(): void {
+    const { injector } = this;
+    // create custom elements from angular components
+    const ngCustomElement = createCustomElement(AppComponent, { injector });
+ 
+    // define in browser registry
+    customElements.define('blog-angular', ngCustomElement);
+  }
+}
